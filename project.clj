@@ -1,4 +1,4 @@
-(defproject io.jepsen/sql "0.1.1-SNAPSHOT"
+(defproject io.jepsen/sql "0.1.1sb-SNAPSHOT"
   :description "A library for writing Jepsen tests of SQL databases"
   :url "https://github.com/jepsen-io/sql"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
