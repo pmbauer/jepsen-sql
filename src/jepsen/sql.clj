@@ -115,6 +115,13 @@
     :default true]
    ])
 
+(defn opt-fn
+  "Transforms CLI options before execution. You can compose this with your own
+  opt fn as well."
+  [parsed]
+  (update-in parsed [:options :expected-consistency-model]
+             #(or % (get-in parsed [:options :isolation]))))
+
 (defn workloads
   "Constructs a map of workload names (e.g. `:internal`) to functions which
   take CLI options and return a workload map (e.g. `{:generator ..., :client
