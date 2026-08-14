@@ -211,7 +211,7 @@ failures correctly. They are:
 `:aborted`                A transaction has been aborted.
 
 `:column-not-found`       An expected column does not exist. This is normal in
-                          some workloads, and disastrousi n others.
+                          some workloads, and disastrous in others.
 
 `:table-not-found`        An expected table does not exist. This is normal in
                           some workloads, and disastrous in others.
