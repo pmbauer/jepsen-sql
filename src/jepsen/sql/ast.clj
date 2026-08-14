@@ -131,12 +131,18 @@
   "The singleton CharacterStringType."
   (CharacterStringType.))
 
+(def text-collation
+  "The collation we use for all textual types. I haven't exactly figured out
+  how this should work--at some point we should probably thread this down
+  through the various generator option maps..."
+  "en_US.utf8")
+
 (defrecord TextType []
   Type
   (super [_] character-string-type)
 
   SQL
-  (sql [_] ["TEXT collate unicode"]))
+  (sql [_] [(str "TEXT collate \"" text-collation \")]))
 
 (def text-type
   "The singleton TextType."
@@ -329,13 +335,14 @@
   "Ugh I just cannot for the life of me figure out the JVM collator API.
   Postgres wants to sort spaces before underscores, but convincing a collator
   to do that seems impossible."
-  (let [c (Collator/getInstance java.util.Locale/US)
-        ; you do NOT want to know
-        rules (str/replace (.getRules c)
-                           #"<'\u005f'"
-                           "<' '<'\u005f'")]
-    (doto (RuleBasedCollator. rules)
-      (.setStrength 3))))
+  ;(let [c (Collator/getInstance java.util.Locale/US)
+  ;      ; you do NOT want to know
+  ;      rules (str/replace (.getRules c)
+  ;                         #"<'\u005f'"
+  ;                         "<' '<'\u005f'")]
+  ;  (doto (RuleBasedCollator. rules)
+  ;    (.setStrength 3)))
+  (Collator/getInstance (java.util.Locale/of "en" "US")))
 
 (defn compare+
   "Compares two objects the same way we expect an SQL database to do."
