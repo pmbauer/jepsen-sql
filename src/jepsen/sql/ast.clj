@@ -134,7 +134,9 @@
 (def text-collation
   "The collation we use for all textual types. I haven't exactly figured out
   how this should work--at some point we should probably thread this down
-  through the various generator option maps..."
+  through the various generator option maps, but for now I'll just define it
+  here and monkeypatch it in tests."
+
   "en_US.utf8")
 
 (defrecord TextType []
@@ -357,7 +359,15 @@
 (defrecord Compare [op left right]
   SQL
   (sql [_]
-    (splice "(" (sql left) " " (name op) " " (sql right) ")"))
+    (let [; Columns will have collations from the schema, but if we're
+          ; comparing two literal strings, we also need to provide an explicit
+          ; collation.
+          collate (when (and (instance? Literal left)
+                           (instance? Literal right)
+                           (string? (:x left))
+                           (string? (:x right)))
+                    (str " COLLATE \"" text-collation "\""))]
+    (splice "(" (sql left) " " (name op) " " (sql right) collate ")")))
 
   Eval
   (eval-without-row? [_]
