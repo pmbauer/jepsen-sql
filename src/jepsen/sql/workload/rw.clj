@@ -20,8 +20,7 @@
             [next.jdbc :as j]
             [next.jdbc.result-set :as rs]
             [next.jdbc.sql.builder :as sqlb]
-            [slingshot.slingshot :refer [try+ throw+]])
-  (:import (org.postgresql.util PSQLException)))
+            [slingshot.slingshot :refer [try+ throw+]]))
 
 (defn table-name
   "Takes an integer and constructs a table name."
