@@ -4,6 +4,7 @@
             [jepsen [cli :as cli]]
             [jepsen.sql [encoding :as encoding]]
             [jepsen.sql.workload [append :as append]
+                                 [default-value :as default-value]
                                  [internal :as internal]
                                  [internal-sim :as internal-sim]
                                  [rw :as rw]]))
@@ -141,6 +142,7 @@
                 (fn workload [cli-opts]
                   (workload-fn (merge cli-opts sql-opts))))]
      (update-vals {:append        append/workload
+                   :default-value default-value/workload
                    :internal      internal/workload
                    :internal-sim  internal-sim/workload
                    :rw            rw/workload}

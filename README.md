@@ -83,7 +83,7 @@ anomalies. However, `rw` may help narrow down failures.
 
 ### Append
 
-The [append](src/jepsen/sql/append.clj) workload looks for transactional
+The [append](src/jepsen/sql/workload/append.clj) workload looks for transactional
 consistency over a map of integer keys to lists of integer values, using over a
 map of integer keys to integer values using
 [Elle](https://github.com/jepsen-io/elle). It stores each key in a single row,
@@ -98,6 +98,12 @@ cycle detection and other heuristics. For more details, see Elle's
 
 Append can indirect operations through a second lookup table.
 
+### Default Value
+
+The [default-value](src/jepsen/sql/workload/default_value.clj) workload creates
+tables and adds columns to them with a default value. It concurrently inserts
+rows into those tables without providing values, and checks to make sure that
+reads observe no rows with NULL values.
 
 ## Usage
 
