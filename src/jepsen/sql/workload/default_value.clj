@@ -14,7 +14,7 @@
 
   To insert a row into a table (without providing values for default columns):
 
-      {:f :insert, :value \"t1\"}
+      {:f :insert, :value {:table \"t1\", :id 1}}
 
   And to read all rows from a table:
 
@@ -27,6 +27,7 @@
                     [generator :as gen]
                     [history :as h]
                     [random :as rand]]
+            [jepsen.checker.plot :as plot]
             [jepsen.sql [base :as base]
                         [client :as c]
                         [checker :as sc]]
@@ -36,7 +37,9 @@
 (defn table-gen
   "Generator of operations on a single table."
   [table]
-  (let [inserts (gen/repeat {:f :insert, :value table})
+  (let [inserts (map (fn [i]
+                       {:f :insert, :value {:table table, :id i}})
+                     (range))
         reads   (gen/repeat {:f :read, :value table})]
     (gen/phases
       (gen/until-ok
@@ -85,8 +88,9 @@
         (assoc op :type :ok))
 
       :insert
-      (do (j/execute! conn [(str "INSERT INTO " value " (a) VALUES (?)") 1])
-          (assoc op :type :ok))
+      (let [{:keys [table id]} value]
+        (j/execute! conn [(str "INSERT INTO " table " (a) VALUES (?)") id])
+        (assoc op :type :ok))
 
       :read
       (let [rows (j/execute! conn [(str "SELECT * FROM " value)]
