@@ -28,7 +28,7 @@
          (ast/sql (ast/column "b" ast/integer-type {:primary-key? true})))))
 
 (deftest table-setup-test
-  (is (= [["CREATE TABLE foo (a TEXT collate unicode, b INTEGER, c BOOLEAN)"]]
+  (is (= [["CREATE TABLE foo (a TEXT collate \"en_US.utf8\", b INTEGER, c BOOLEAN)"]]
          (->> (ast/table "foo" [(ast/column "a" ast/text-type)
                                 (ast/column "b" ast/integer-type)
                                 (ast/column "c" ast/boolean-type)])
@@ -100,14 +100,14 @@
 (deftest compare+-test
   (let [strings [""
                  " "
-                 " a"
-                 " XipmwdcMm1ch656Vg5F9mIzp6i"
                  "a"
+                 " a"
                  "s9tO8o 4PhpgRdxC5CLCOsy"
+                 " XipmwdcMm1ch656Vg5F9mIzp6i"
                  ]]
     ; Just for playing around at psql
     #_(do (println "DROP TABLE IF EXISTS t;")
-        (println "CREATE TABLE t (s text collate \"en_US\");")
+        (println "CREATE TABLE t (s text collate \"en_US.utf8\");")
         (println (str "INSERT INTO t VALUES "
                       (str/join ", " (map (fn [s] (str "('" s "')")) strings))
                       ";"))
